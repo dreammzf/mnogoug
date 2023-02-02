@@ -46,7 +46,6 @@ namespace mnogoug
             {
                 foreach (Figure fig in figs)
                 {
-                    check = false;
                     if (draw == true)
                     {
                         if (fig.Check(e.X, e.Y) == true)
@@ -60,10 +59,8 @@ namespace mnogoug
                             }
                             if (e.Button == MouseButtons.Right)
                             {
-                                draw = false;
-                                check = false;
                                 figs.Remove(fig);
-                                draw = true;
+                                Refresh();
                                 break;
                             }
                         }
@@ -73,17 +70,17 @@ namespace mnogoug
             if (e.Button == MouseButtons.Left && check == false)
             {
                 draw = true;
-                if (choice == 1)
+                switch (choice)
                 {
-                    f = new Circle(e.X, e.Y);
-                }
-                if (choice == 2)
-                {
-                    f = new Triangle(e.X, e.Y);
-                }
-                if (choice == 3)
-                {
-                    f = new Square(e.X, e.Y);
+                    case 1:
+                        f = new Circle(e.X, e.Y);
+                        break;
+                    case 2:
+                        f = new Triangle(e.X, e.Y);
+                        break;
+                    case 3:
+                        f = new Square(e.X, e.Y);
+                        break;
                 }
                 figs.Add(f);
             }

@@ -49,22 +49,22 @@ namespace mnogoug
         {
             get
             {
-                return y;
+                return dx;
             }
             set
             {
-                y = value;
+                dx = value;
             }
         }
         public int Dy
         {
             get
             {
-                return y;
+                return dy;
             }
             set
             {
-                y = value;
+                dy = value;
             }
         }
         public bool BeingDragged
@@ -113,16 +113,18 @@ namespace mnogoug
         }
         public Circle(int x, int y)
         {
-            this.x = x - r;
-            this.y = y - r;
+            this.x = x;
+            this.y = y;
         }
         public override void Draw(Graphics g)
         {
-            g.FillEllipse(new SolidBrush(clr), x, y, 2 * r, 2 * r);
+            g.FillEllipse(new SolidBrush(clr), x - r, y - r, 2 * r, 2 * r);
         }
         public override bool Check(int xm, int ym)
         {
-            if (xm < x + 2 * r && xm > x && ym > y - r && ym < y + r)
+            double xx = Math.Pow(x - xm, 2);
+            double yy = Math.Pow(y - ym, 2);
+            if (xx + yy <= Math.Pow(2 * r / 2, 2))
             {
                 return true;
             }
