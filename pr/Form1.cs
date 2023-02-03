@@ -8,13 +8,12 @@ using System.ComponentModel;
 using System.Data;
 using System.Windows.Forms;
 
-namespace demo
+namespace pr
 {
     public partial class Form1 : Form
     {
         bool draw;
-        int a;
-        List<Circle> versh = new List<Circle>();
+        List<Circle> figs = new List<Circle>();
         public Form1()
         {
             InitializeComponent();
@@ -33,25 +32,57 @@ namespace demo
 
         private void Form1_Paint(object sender, PaintEventArgs e)
         {
-            if (versh.Any())
+            if (figs.Any())
             {
-                foreach (Circle fig in versh)
+                foreach (Circle fig in figs)
                 {
                     fig.Draw(e.Graphics);
+                }
+                if (figs.Count > 2)
+                {
+                    CreateShape(e.Graphics);
+                }
+            }
+        }
+
+        private void CreateShape(Graphics e)
+        {
+            for (int i = 0; i < figs.Count; i++)
+                figs[i].isInside = false;
+
+            for (int i = 0; i < figs.Count - 1; i++)
+            {
+                for (int j = i + 1; j < figs.Count; j++)
+                {
+                    bool aboveShape = true;
+                    bool belowShape = true;
+                    for (int k = 0; k<figs.Count; k++)
+                    {
+                        if (k != j && k != i && i != j)
+                        {
+
+                        }
+                    }
+                    if (aboveShape == true || belowShape == true)
+                    {
+
+                    }
                 }
             }
         }
 
         private void Form1_MouseDown(object sender, MouseEventArgs e)
         {
-            if (versh.Any())
+            bool check = false;
+            if (figs.Any())
             {
-                foreach (Circle fig in versh)
+                foreach (Circle fig in figs)
                 {
                     if (draw == true)
                     {
                         if (fig.Check(e.X, e.Y) == true)
                         {
+                            check = true;
                             if (e.Button == MouseButtons.Left)
                             {
                                 fig.beingDragged = true;
@@ -60,20 +91,19 @@ namespace demo
                             }
                             else if (e.Button == MouseButtons.Right)
                             {
-                                draw = false;
                                 Refresh();
-                                versh.Remove(fig);
+                                figs.Remove(fig);
                                 break;
                             }
                         }
                     }
                 }
             }
-            if (e.Button == MouseButtons.Left && fig.Check(e.X, e.Y) == false)
+            if (e.Button == MouseButtons.Left && check == false)
             {
                 draw = true;
                 Circle fig = new Circle(e.X, e.Y);
-                versh.Add(fig);
+                figs.Add(fig);
             }
 
             Refresh();
@@ -82,10 +112,9 @@ namespace demo
 
         private void Form1_MouseMove(object sender, MouseEventArgs e)
         {
-
-            if (versh.Any())
+            if (figs.Any())
             {
-                foreach (Circle fig in versh)
+                foreach (Circle fig in figs)
                 {
                     if (fig.beingDragged)
                     {
@@ -100,9 +129,9 @@ namespace demo
 
         private void Form1_MouseUp(object sender, MouseEventArgs e)
         {
-            if (versh.Any())
+            if (figs.Any())
             {
-                foreach (Circle fig in versh)
+                foreach (Circle fig in figs)
                 {
                     fig.beingDragged = false;
                 }
@@ -112,21 +141,6 @@ namespace demo
         private void выборToolStripMenuItem_Click(object sender, EventArgs e)
         {
 
-        }
-
-        private void кругToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            a = 1;
-        }
-
-        private void треугольникToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            a = 2;
-        }
-
-        private void квадратToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            a = 3;
         }
     }
     class Circle
@@ -141,6 +155,7 @@ namespace demo
         public int dx { get; set; }
         public int dy { get; set; }
         public bool beingDragged { get; set; }
+        public bool isInside { get; set; }
         public void Draw(Graphics g)
         {
             g.FillEllipse(new SolidBrush(Color.Lime), x - 25, y - 25, 50, 50);
