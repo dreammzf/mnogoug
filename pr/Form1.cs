@@ -56,17 +56,24 @@ namespace pr
                 {
                     bool aboveShape = true;
                     bool belowShape = true;
-                    for (int k = 0; k<figs.Count; k++)
+                    for (int k = 0; k < figs.Count; k++)
                     {
                         if (k != j && k != i && i != j)
                         {
-                            if ((figs[k].x - figs[i].x) * (figs[j].x - figs[i].x) / (figs[j].x - figs[i].x) + figs[i].y >= 0)
+                            try
                             {
-                                aboveShape = true;
+                                if ((figs[k].y - figs[j].y) * (figs[i].x - figs[j].x) - (figs[i].y - figs[j].y) * (figs[k].x - figs[j].x) >= 0)
+                                {
+                                    aboveShape = false;
+                                }
+                                else
+                                {
+                                    belowShape = false;
+                                }
                             }
-                            else
+                            catch
                             {
-                                belowShape = true;
+                                break;
                             }
                         }
                     }
@@ -74,8 +81,6 @@ namespace pr
                     {
                         e.DrawLine(new Pen(Color.Black), figs[i].x, figs[i].y, figs[j].x, figs[j].y);
                     }
-                    aboveShape = false;
-                    belowShape = false;
                 }
             }
         }
