@@ -60,13 +60,22 @@ namespace pr
                     {
                         if (k != j && k != i && i != j)
                         {
-
+                            if ((figs[k].x - figs[i].x) * (figs[j].x - figs[i].x) / (figs[j].x - figs[i].x) + figs[i].y >= 0)
+                            {
+                                aboveShape = true;
+                            }
+                            else
+                            {
+                                belowShape = true;
+                            }
                         }
                     }
                     if (aboveShape == true || belowShape == true)
                     {
-
+                        e.DrawLine(new Pen(Color.Black), figs[i].x, figs[i].y, figs[j].x, figs[j].y);
                     }
+                    aboveShape = false;
+                    belowShape = false;
                 }
             }
         }
