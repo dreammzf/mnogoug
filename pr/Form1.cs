@@ -56,7 +56,7 @@ namespace pr
                 {
                     bool aboveShape = true;
                     bool belowShape = true;
-                    for (int k = 0; k<figs.Count; k++)
+                    for (int k = 0; k < figs.Count; k++)
                     {
                         if (k != j && k != i && i != j)
                         {
