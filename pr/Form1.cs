@@ -64,7 +64,13 @@ namespace pr
                         {
                             try
                             {
-                                if ((figs[k].y - figs[j].y) * (figs[i].x - figs[j].x) - (figs[i].y - figs[j].y) * (figs[k].x - figs[j].x) >= 0)
+                                int x0 = figs[i].x;
+                                int x1 = figs[j].x;
+                                int x2 = figs[k].x;
+                                int y0 = figs[i].y;
+                                int y1 = figs[j].y;
+                                int y2 = figs[k].y;
+                                if ((x2 * y1 - x2 * y0 - x0 * y1 + x0 * y0) / (x1 - x0) + y0 - y2 >= 0)
                                 {
                                     aboveShape = false;
                                 }
@@ -82,18 +88,12 @@ namespace pr
                     if (aboveShape == true || belowShape == true)
                     {
                         e.DrawLine(new Pen(Color.Black), figs[i].x, figs[i].y, figs[j].x, figs[j].y);
-                    }
-                    if (aboveShape == false && belowShape == false)
-                    {
                         figs[i].isInside = true;
                         figs[j].isInside = true;
                     }
                 }
             }
-            if (figs[figs.Count-1].isInside)
-            {
-                button1.Text = "isinside";
-            }
+
         }
 
         private void Form1_MouseDown(object sender, MouseEventArgs e)
@@ -124,13 +124,24 @@ namespace pr
                     }
                 }
             }
-            if (e.Button == MouseButtons.Left && check == false)
+            if (e.Button == MouseButtons.Left && check == false && allDragged == false)
             {
+                Circle f = new Circle(e.X, e.Y);
                 draw = true;
-                Circle fig = new Circle(e.X, e.Y);
-                figs.Add(fig);
+                figs.Add(f);
+                Refresh();
+                if (figs.Count > 2 && figs[figs.Count - 1].isInside == false)
+                {
+                    figs.RemoveAt(figs.Count - 1);
+                    allDragged = true;
+                    foreach (Circle fig in figs)
+                    {
+                        fig.dx = e.X - fig.x;
+                        fig.dy = e.Y - fig.y;
+                    }
+                }
+                Refresh();
             }
-            Refresh();
         }
 
 
@@ -142,26 +153,18 @@ namespace pr
                 {
                     foreach (Circle fig in figs)
                     {
-                        if (fig.beingDragged)
-                        {
-                            fig.x = e.X - fig.dx;
-                            fig.y = e.Y - fig.dy;
-                        }
-                        Refresh();
+                        fig.beingDragged = true;
                     }
                 }
-                else
+                foreach (Circle fig in figs)
                 {
-                    foreach (Circle fig in figs)
+                    if (fig.beingDragged)
                     {
-                        if (fig.beingDragged)
-                        {
-                            fig.x = e.X - fig.dx;
-                            fig.y = e.Y - fig.dy;
-                        }
-                        Refresh();
+                        fig.x = e.X - fig.dx;
+                        fig.y = e.Y - fig.dy;
                     }
                 }
+                Refresh();
             }
         }
 
@@ -169,6 +172,17 @@ namespace pr
         {
             if (figs.Any())
             {
+                allDragged = false;
+                if (figs.Count > 2)
+                {
+                    for (int f = 0; f < figs.Count; f++)
+                    {
+                        if (figs[f].isInside == false)
+                        {
+                            figs.Remove(figs[f]);
+                        }
+                    }
+                }
                 foreach (Circle fig in figs)
                 {
                     fig.beingDragged = false;
@@ -181,6 +195,7 @@ namespace pr
 
         }
     }
+
     class Circle
     {
         public Circle(int x, int y)

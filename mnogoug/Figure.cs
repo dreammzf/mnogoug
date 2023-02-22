@@ -15,7 +15,6 @@ namespace mnogoug
         protected int y;
         protected int dx;
         protected int dy;
-        protected bool beingDragged;
 
         static Figure()
         {
@@ -67,17 +66,10 @@ namespace mnogoug
                 dy = value;
             }
         }
-        public bool BeingDragged
-        {
-            get
-            {
-                return beingDragged;
-            }
-            set
-            {
-                beingDragged = value;
-            }
-        }
+
+        public bool beingDragged { get; set; }
+        public bool isInside { get; set; }
+
         public static int R
         {
             get
@@ -108,7 +100,7 @@ namespace mnogoug
     {
         public Circle()
         {
-            this.x = 100;
+            this.x = 50;
             this.y = 100;
         }
         public Circle(int x, int y)
@@ -138,8 +130,8 @@ namespace mnogoug
     {
         public Square()
         {
-            this.x = 100;
-            this.y = 100;
+            this.x = 50;
+            this.y = 50;
         }
         public Square(int x, int y)
         {
@@ -173,8 +165,8 @@ namespace mnogoug
     {
         public Triangle()
         {
-            this.x = 100;
-            this.y = 100;
+            this.x = 50;
+            this.y = 50;
         }
         public Triangle(int x, int y)
         {

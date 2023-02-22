@@ -14,12 +14,14 @@ namespace mnogoug
     {
         List<Figure> figs = new List<Figure>();
         bool draw;
+        bool allDragged;
         int choice;
         Figure f;
         public Form1()
         {
             InitializeComponent();
             draw = false;
+            allDragged = false;
             choice = 1;
         }
 
@@ -36,7 +38,59 @@ namespace mnogoug
                 {
                     fig.Draw(e.Graphics);
                 }
+                if (figs.Count > 2)
+                {
+                    CreateShape(e.Graphics);
+                }
             }
+        }
+
+        private void CreateShape(Graphics e)
+        {
+            for (int i = 0; i < figs.Count; i++)
+                figs[i].isInside = false;
+
+            for (int i = 0; i < figs.Count - 1; i++)
+            {
+                for (int j = i + 1; j < figs.Count; j++)
+                {
+                    bool aboveShape = true;
+                    bool belowShape = true;
+                    for (int k = 0; k < figs.Count; k++)
+                    {
+                        if (k != j && k != i && i != j)
+                        {
+                            try
+                            {
+                                int x0 = figs[i].X;
+                                int x1 = figs[j].X;
+                                int x2 = figs[k].X;
+                                int y0 = figs[i].Y;
+                                int y1 = figs[j].Y;
+                                int y2 = figs[k].Y;
+                                if ((x2 * y1 - x2 * y0 - x0 * y1 + x0 * y0) / (x1 - x0) + y0 - y2 >= 0)
+                                {
+                                    aboveShape = false;
+                                }
+                                else
+                                {
+                                    belowShape = false;
+                                }
+                            }
+                            catch
+                            {
+                                break;
+                            }
+                        }
+                    }
+                    if (aboveShape == true || belowShape == true)
+                    {
+                        figs[i].isInside = true;
+                        figs[j].isInside = true;
+                    }
+                }
+            }
+
         }
 
         private void Form1_MouseDown(object sender, MouseEventArgs e)
@@ -53,7 +107,7 @@ namespace mnogoug
                             check = true;
                             if (e.Button == MouseButtons.Left)
                             {
-                                fig.BeingDragged = true;
+                                fig.beingDragged = true;
                                 fig.Dx = e.X - fig.X;
                                 fig.Dy = e.Y - fig.Y;
                             }
@@ -83,8 +137,19 @@ namespace mnogoug
                         break;
                 }
                 figs.Add(f);
+                Refresh();
+                if (figs.Count > 2 && figs[figs.Count - 1].isInside == false)
+                {
+                    figs.RemoveAt(figs.Count - 1);
+                    allDragged = true;
+                    foreach (Figure fig in figs)
+                    {
+                        fig.Dx = e.X - fig.X;
+                        fig.Dy = e.Y - fig.Y;
+                    }
+                }
+                Refresh();
             }
-            Refresh();
         }
 
         private void Form1_MouseMove(object sender, MouseEventArgs e)
@@ -92,25 +157,43 @@ namespace mnogoug
 
             if (figs.Any())
             {
+                if (allDragged)
+                {
+                    foreach (Figure fig in figs)
+                    {
+                        fig.beingDragged = true;
+                    }
+                }
                 foreach (Figure fig in figs)
                 {
-                    if (fig.BeingDragged)
+                    if (fig.beingDragged)
                     {
                         fig.X = e.X - fig.Dx;
                         fig.Y = e.Y - fig.Dy;
                     }
                 }
+                Refresh();
             }
-            Refresh();
         }
 
         private void Form1_MouseUp(object sender, MouseEventArgs e)
         {
             if (figs.Any())
             {
+                allDragged = false;
+                if (figs.Count > 2)
+                {
+                    for (int f = 0; f < figs.Count; f++)
+                    {
+                        if (figs[f].isInside == false)
+                        {
+                            figs.Remove(figs[f]);
+                        }
+                    }
+                }
                 foreach (Figure fig in figs)
                 {
-                    fig.BeingDragged = false;
+                    fig.beingDragged = false;
                 }
             }
         }
