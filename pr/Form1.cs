@@ -82,54 +82,20 @@ namespace pr
                     if (aboveShape == true || belowShape == true)
                     {
                         e.DrawLine(new Pen(Color.Black), figs[i].x, figs[i].y, figs[j].x, figs[j].y);
+                    }
+                    if (aboveShape == false && belowShape == false)
+                    {
                         figs[i].isInside = true;
                         figs[j].isInside = true;
                     }
                 }
             }
-
-        }
-        private void Drag(Graphics e)
-        {
-            for (int i = 0; i < figs.Count; i++)
-                figs[i].isInside = false;
-
-            for (int i = 0; i < figs.Count - 1; i++)
+            if (figs[figs.Count-1].isInside)
             {
-                for (int j = i + 1; j < figs.Count; j++)
-                {
-                    bool aboveShape = true;
-                    bool belowShape = true;
-                    for (int k = 0; k < figs.Count; k++)
-                    {
-                        if (k != j && k != i && i != j)
-                        {
-                            try
-                            {
-                                if ((figs[k].y - figs[j].y) * (figs[i].x - figs[j].x) - (figs[i].y - figs[j].y) * (figs[k].x - figs[j].x) >= 0)
-                                {
-                                    aboveShape = false;
-                                }
-                                else
-                                {
-                                    belowShape = false;
-                                }
-                            }
-                            catch
-                            {
-                                break;
-                            }
-                        }
-                    }
-                    if (aboveShape == true || belowShape == true)
-                    {
-                        e.DrawLine(new Pen(Color.Black), figs[i].x, figs[i].y, figs[j].x, figs[j].y);
-                        figs[i].isInside = true;
-                        figs[j].isInside = true;
-                    }
-                }
+                button1.Text = "isinside";
             }
         }
+
         private void Form1_MouseDown(object sender, MouseEventArgs e)
         {
             bool check = false;
@@ -158,7 +124,7 @@ namespace pr
                     }
                 }
             }
-            if (e.Button == MouseButtons.Left && check == false && allDragged == false)
+            if (e.Button == MouseButtons.Left && check == false)
             {
                 draw = true;
                 Circle fig = new Circle(e.X, e.Y);
@@ -194,7 +160,7 @@ namespace pr
                             fig.y = e.Y - fig.dy;
                         }
                         Refresh();
-                }
+                    }
                 }
             }
         }
@@ -206,17 +172,6 @@ namespace pr
                 foreach (Circle fig in figs)
                 {
                     fig.beingDragged = false;
-                }
-                if (figs.Count > 2)
-                {
-                    for (int i = 0; i < figs.Count; i++)
-                    {
-                        if (figs[i].isInside == false)
-                        {
-                            figs.Remove(figs[i]);
-                            Refresh();
-                        }
-                    }
                 }
             }
         }
