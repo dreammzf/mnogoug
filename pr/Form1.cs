@@ -64,7 +64,13 @@ namespace pr
                         {
                             try
                             {
-                                if ((figs[k].x * figs[j].y - figs[k].x * figs[i].y - figs[i].x * figs[j].y + figs[i].x * figs[i].y) / (figs[j].x - figs[i].x) + figs[i].x - figs[k].y >= 0)
+                                int x0 = figs[i].x;
+                                int x1 = figs[j].x;
+                                int x2 = figs[k].x;
+                                int y0 = figs[i].y;
+                                int y1 = figs[j].y;
+                                int y2 = figs[k].y;
+                                if ((x2 * y1 - x2 * y0 - x0 * y1 + x0 * y0) / (x1 - x0) + y0 - y2 >= 0)
                                 {
                                     aboveShape = false;
                                 }
@@ -119,22 +125,22 @@ namespace pr
                 }
             }
             if (e.Button == MouseButtons.Left && check == false && allDragged == false)
-            {   
+            {
                 Circle f = new Circle(e.X, e.Y);
                 draw = true;
                 figs.Add(f);
                 Refresh();
-                if (figs.Count > 2 && figs[figs.Count-1].isInside == false)
+                if (figs.Count > 2 && figs[figs.Count - 1].isInside == false)
                 {
-
+                    figs.RemoveAt(figs.Count - 1);
                     allDragged = true;
                     foreach (Circle fig in figs)
                     {
                         fig.dx = e.X - fig.x;
                         fig.dy = e.Y - fig.y;
                     }
-                    Refresh();
                 }
+                Refresh();
             }
         }
 
@@ -148,7 +154,6 @@ namespace pr
                     foreach (Circle fig in figs)
                     {
                         fig.beingDragged = true;
-                        Refresh();
                     }
                 }
                 foreach (Circle fig in figs)
@@ -158,8 +163,8 @@ namespace pr
                         fig.x = e.X - fig.dx;
                         fig.y = e.Y - fig.dy;
                     }
-                    Refresh();
                 }
+                Refresh();
             }
         }
 
@@ -168,6 +173,17 @@ namespace pr
             allDragged = false;
             if (figs.Any())
             {
+                allDragged = false;
+                if (figs.Count > 2)
+                {
+                    for (int f = 0; f < figs.Count; f++)
+                    {
+                        if (figs[f].isInside == false)
+                        {
+                            figs.Remove(figs[f]);
+                        }
+                    }
+                }
                 foreach (Circle fig in figs)
                 {
                     fig.beingDragged = false;
@@ -180,6 +196,7 @@ namespace pr
 
         }
     }
+
     class Circle
     {
         public Circle(int x, int y)
@@ -206,4 +223,3 @@ namespace pr
         }
     }
 }
-
