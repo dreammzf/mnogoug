@@ -85,6 +85,10 @@ namespace mnogoug
                     }
                     if (aboveShape == true || belowShape == true)
                     {
+                        if (choice == 1)
+                            e.DrawLine(new Pen(Color.Black), figs[i].X, figs[i].Y, figs[j].X, figs[j].Y);
+                        if (choice == 3)
+                            e.DrawLine(new Pen(Color.Black), figs[i].X + 25, figs[i].Y + 25, figs[j].X + 25, figs[j].Y + 25);
                         figs[i].isInside = true;
                         figs[j].isInside = true;
                     }

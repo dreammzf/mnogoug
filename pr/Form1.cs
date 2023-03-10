@@ -88,8 +88,8 @@ namespace pr
                     if (aboveShape == true || belowShape == true)
                     {
                         e.DrawLine(new Pen(Color.Black), figs[i].x, figs[i].y, figs[j].x, figs[j].y);
-                        figs[i].isInside = false;
-                        figs[j].isInside = false;
+                        figs[i].isInside = true;
+                        figs[j].isInside = true;
                     }
                 }
             }
@@ -170,7 +170,6 @@ namespace pr
 
         private void Form1_MouseUp(object sender, MouseEventArgs e)
         {
-            allDragged = false;
             if (figs.Any())
             {
                 allDragged = false;
