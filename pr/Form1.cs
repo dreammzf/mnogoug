@@ -27,11 +27,6 @@ namespace pr
 
         }
 
-        private void toolStripComboBox1_Click(object sender, EventArgs e)
-        {
-
-        }
-
         private void Form1_Paint(object sender, PaintEventArgs e)
         {
             if (figs.Any())
@@ -190,14 +185,29 @@ namespace pr
             }
         }
 
-        private void выборToolStripMenuItem_Click(object sender, EventArgs e)
+        private void colorToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            if (colorDialog1.ShowDialog() == DialogResult.OK)
+            {
+                Circle.Color = colorDialog1.Color;
+                Refresh();
+            }
+        }
 
+        private void размерToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Form2 form = new Form2();
+            if (form.ShowDialog() == DialogResult.OK)
+            {
+                Refresh();
+            }
         }
     }
 
     class Circle
     {
+        static Color color = Color.Lime;
+        static int r = 50;
         public Circle(int x, int y)
         {
             this.x = x;
@@ -209,15 +219,37 @@ namespace pr
         public int dy { get; set; }
         public bool beingDragged { get; set; }
         public bool isInside { get; set; }
+        public static Color Color 
+        { 
+            get
+            {
+                return color;
+            }
+            set
+            {
+                color = value;
+            }
+        }
+        public static int R
+        {
+            get
+            {
+                return r;
+            }
+            set
+            {
+                r = value;
+            }
+        }
         public void Draw(Graphics g)
         {
-            g.FillEllipse(new SolidBrush(Color.Lime), x - 25, y - 25, 50, 50);
+            g.FillEllipse(new SolidBrush(color), x - r/2, y - r/2, r, r);
         }
         public bool Check(int xm, int ym)
         {
             double xx = Math.Pow(x - xm, 2);
             double yy = Math.Pow(y - ym, 2);
-            if (xx + yy <= Math.Pow(50f / 2, 2)) return true;
+            if (xx + yy <= Math.Pow(r / 2, 2)) return true;
             else return false;
         }
     }
